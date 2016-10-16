@@ -5,8 +5,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
-
-import classDelegator
+from interfaceFactory import classDelegator
 
 class JSONResponse(HttpResponse):
     """
@@ -17,15 +16,15 @@ class JSONResponse(HttpResponse):
         kwargs['content_type'] = 'application/json'
         super(JSONResponse, self).__init__(content, **kwargs)
 
-    @csrf_exempt
-    def snippet_list(request):
-        """
-        List all code snippets, or create a new snippet.
-        """
-        if request.method == 'GET':
-            delegatorInstance = classDelegator.delegator()
-            response = delegatorInstance.delegateAndCall("dummyClass","dummyMethod")
-            return JSONResponse(data = response[1],status = response[0])
+@csrf_exempt
+def call_delegate(request):
+    """
+    List all code snippets, or create a new snippet.
+    """
+    if request.method == 'GET':
+        delegatorInstance = classDelegator.delegator()
+        response = delegatorInstance.delegateAndCall("dummyClass","dummyMethod")
+        return JSONResponse(data=response[0],status=response[1])
 
-        elif request.method == 'POST':
-            return JSONResponse(data = "Post Not Supported",status = 404)
+    elif request.method == 'POST':
+        return JSONResponse(data = "Post Not Supported",status = 404)
