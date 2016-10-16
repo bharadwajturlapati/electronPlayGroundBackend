@@ -1,0 +1,1 @@
+call env\Scripts\deactivate.bat
